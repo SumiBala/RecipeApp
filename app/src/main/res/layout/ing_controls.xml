@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/ingredientTv"
+            style="@style/wrapStyle"
+            android:layout_marginStart="@dimen/defaultMargin"
+            android:layout_marginTop="@dimen/ingrToppad"
+            android:textAppearance="?android:textAppearanceLarge"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Ingredient" />
+
+        <TextView
+            android:id="@+id/qtyTv"
+            style="@style/wrapStyle"
+            android:layout_marginStart="@dimen/qtyMarginStart"
+            android:layout_marginTop="@dimen/defaultMargin"
+            android:textAppearance="?android:textAppearanceMedium"
+            app:layout_constraintStart_toEndOf="@+id/ingredientTv"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5" />
+
+        <TextView
+            android:id="@+id/msrTv"
+            style="@style/wrapStyle"
+            android:layout_marginTop="@dimen/msrToppad"
+            android:textAppearance="?android:textAppearanceSmall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.026"
+            app:layout_constraintStart_toEndOf="@id/qtyTv"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="cup" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

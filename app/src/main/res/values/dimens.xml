@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="defaultMargin">8dp</dimen>
+    <dimen name="tenDp">10dp</dimen>
+    <dimen name="fourDp">4dp</dimen>
+    <dimen name="ingrToppad">@dimen/fourDp</dimen>
+    <dimen name="cardMarginTop">@dimen/tenDp</dimen>
+    <dimen name="view_marginTopPadding">20dp</dimen>
+    <dimen name="widget_margin">@dimen/defaultMargin</dimen>
+    <dimen name="cardelevation">5dp</dimen>
+    <dimen name="cardRadius">@dimen/tenDp</dimen>
+    <dimen name="twlvDp">12dp</dimen>
+    <dimen name="imgHtDp">84dp</dimen>
+    <dimen name="imgWidthDp">186dp</dimen>
+    <dimen name="emptyTxtpadding">@dimen/tenDp</dimen>
+    <dimen name="widgetTxtMarginTop">@dimen/fourDp</dimen>
+    <dimen name="widgetRnameTxtsize">18sp</dimen>
+    <dimen name="ingrwidgetSize">14sp</dimen>
+    <dimen name="msgTextSize">32sp</dimen>
+    <dimen name="msrToppad">@dimen/twlvDp</dimen>
+    <dimen name="qtyMarginStart">@dimen/tenDp</dimen>
+</resources>

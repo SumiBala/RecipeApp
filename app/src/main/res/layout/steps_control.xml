@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/stepscard_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/colorBg"
+        card_view:cardCornerRadius="@dimen/cardRadius"
+        card_view:cardElevation="@dimen/cardelevation"
+        card_view:cardUseCompatPadding="true">
+
+        <TextView
+            android:id="@+id/listItem"
+            style="@style/cardText"
+            android:layout_margin="@dimen/defaultMargin"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            tools:text="@string/recipe" />
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
