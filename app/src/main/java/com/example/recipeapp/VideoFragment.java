@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     private Context mContext;
     private static final String STEPS = "steps";
     private static final String INDEX = "index";
-    private static final String IMGSRC = "image";
+    private static final String IMAGE = "image";
     private static final String TAG = VideoActivity.class.getSimpleName();
     private int mIndex;
     private String mImageSrc;
@@ -77,6 +78,8 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     private int mTotalSteps;
     private API_Confiq config;
     private String tUrl;
+    private long mPlayerPos;
+    private boolean mPlayerState;
     private int firstStep = 0;
 
     public VideoFragment() {
@@ -86,7 +89,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     public static VideoFragment newInstance(String img, ArrayList<Steps> steps, int index) {
         VideoFragment fragment = new VideoFragment();
         Bundle args = new Bundle();
-        args.putString(IMGSRC, img);
+        args.putString(IMAGE, img);
         args.putParcelableArrayList(STEPS, steps);
         args.putInt(INDEX, index);
         fragment.setArguments(args);
@@ -96,9 +99,9 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (getArguments() != null) {
-            mImageSrc = getArguments().getString(IMGSRC);
             mSteps = getArguments().getParcelableArrayList(STEPS);
             mIndex = getArguments().getInt(INDEX);
+            mImageSrc = getArguments().getString(IMAGE);
         }
         super.onCreate(savedInstanceState);
     }
@@ -111,6 +114,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         ButterKnife.bind(this, view);
         mContext = getContext();
         config = new API_Confiq(mContext);
+        stepDescription.setMovementMethod(new ScrollingMovementMethod());
         if (mContext != null) {
             mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         }
@@ -118,12 +122,12 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         if (mSteps != null) {
             mTotalSteps = mSteps.size();
         }
-        if (savedInstanceState == null) {
-            visibilityLoadData(mIndex);
-        } else {
+        if (savedInstanceState != null) {
             mIndex = savedInstanceState.getInt("curIndex");
-            visibilityLoadData(mIndex);
+            mPlayerPos = savedInstanceState.getLong("playerPos");
+            mPlayerState = savedInstanceState.getBoolean("playerState");
         }
+        visibilityLoadData(mIndex);
         return view;
     }
 
@@ -143,36 +147,41 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         if (mSteps != null) {
             stepDescription.setText(mSteps.get(index).getDescription());
             tUrl = mSteps.get(index).getVideoUrl();
-            loadViews(tUrl);
-        }
-    }
-
-    private void loadViews(String tUrl) {
-        if (!tUrl.isEmpty()) {
-            emptyTxt.setVisibility(View.INVISIBLE);
-            imageView.setVisibility(View.GONE);
-            if (config.netIsConnected()) {
-                mPlayerView.setVisibility(View.VISIBLE);
-                initializePlayer(Uri.parse(tUrl));
-            } else {
-                showError(getString(R.string.no_internet_connection));
-            }
-        } else {
-            if (mImageSrc.isEmpty()) {
-                Picasso.with(mContext)
-                        .load(R.drawable.recipe)
-                        .error(R.drawable.placholder)
-                        .placeholder(R.drawable.placholder)
-                        .into(imageView);
-            } else {
+            String imgUrl = mSteps.get(index).getImageUrl();
+            if (!tUrl.isEmpty()) {
+                //Video is not empty,load VideoUrl
+                loadViews(tUrl);
+            } else if (!imgUrl.isEmpty()) {
+                tUrl = imgUrl;
+                //If Video is empty and thumbnailurl is not empty
+                loadViews(tUrl);
+            } else if (!mImageSrc.isEmpty()) {
+                //If Video is empty,Thumbnail is empty, Load image.
                 Picasso.with(mContext)
                         .load(mImageSrc)
                         .error(R.drawable.placholder)
                         .placeholder(R.drawable.placholder)
                         .into(imageView);
+            } else {
+                //If Video is empty,Thumbnail is empty, image also empty,place default image.
+                Picasso.with(mContext)
+                        .load(R.drawable.recipe)
+                        .error(R.drawable.placholder)
+                        .placeholder(R.drawable.placholder)
+                        .into(imageView);
                 showError(getString(R.string.no_video));
             }
-            showError(getString(R.string.no_video));
+        }
+    }
+
+    private void loadViews(String tUrl) {
+        emptyTxt.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.GONE);
+        if (config.netIsConnected()) {
+            mPlayerView.setVisibility(View.VISIBLE);
+            initializePlayer(Uri.parse(tUrl));
+        } else {
+            showError(getString(R.string.no_internet_connection));
         }
     }
 
@@ -312,11 +321,14 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         public void onReceive(Context context, Intent intent) {
             MediaButtonReceiver.handleIntent(mMediaSession, intent);
         }
+
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle currentState) {
         currentState.putInt("curIndex", mIndex);
+        currentState.putLong("playerPos", mPlayerPos);
+        currentState.putBoolean("playerState", mPlayerState);
         super.onSaveInstanceState(currentState);
     }
 
@@ -331,15 +343,30 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     @Override
     public void onResume() {
         super.onResume();
-        if (tUrl != null) {
-            initializePlayer(Uri.parse(tUrl));
+        if (mExoPlayer != null) {
+            //Resume Video properly.
+            mExoPlayer.setPlayWhenReady(mPlayerState);
+            mExoPlayer.seekTo(mPlayerPos);
+        } else {
+            if (tUrl != null) {
+                initializePlayer(Uri.parse(tUrl));
+                mExoPlayer.setPlayWhenReady(mPlayerState);
+                mExoPlayer.seekTo(mPlayerPos);
+            }
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        releasePlayer();
+        if (mExoPlayer != null) {
+            mPlayerState = mExoPlayer.getPlayWhenReady();
+            mPlayerPos = mExoPlayer.getCurrentPosition();
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+        }
     }
 
     @Override

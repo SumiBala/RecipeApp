@@ -9,57 +9,56 @@
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/playerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/defaultMargin"
-        android:layout_marginTop="@dimen/twlvDp"
-         />
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="@dimen/imgWidthDp"
-            android:layout_height="@dimen/imgHtDp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/recipeDescription"
-            android:src="@drawable/recipe"
-            android:visibility="gone" />
+        android:layout_height="300dp" />
 
-        <TextView
-            android:id="@+id/emptytxt"
-            style="@style/msgText"
-            android:drawableStart="@drawable/ic_cooking"
-            android:drawablePadding="@dimen/emptyTxtpadding"
-            android:visibility="gone" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/imgWidthDp"
+        android:layout_height="@dimen/imgHtDp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/recipeDescription"
+        android:src="@drawable/recipe"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/stepsDescription"
-            style="@style/stepsStyle"
+    <TextView
+        android:id="@+id/emptytxt"
+        style="@style/msgText"
+        android:layout_gravity="center"
+        android:drawableStart="@drawable/ic_cooking"
+        android:drawablePadding="@dimen/emptyTxtpadding"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/stepsDescription"
+        style="@style/stepsStyle"
+        android:scrollbars="vertical"
+        android:textAppearance="?android:textAppearanceMedium"
+        tools:ignore="TextViewEdits"
+        tools:text="@string/steps" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/prevVw"
+            style="@style/wrapStyle"
+            android:layout_alignParentStart="true"
             android:layout_margin="@dimen/defaultMargin"
-            android:textAppearance="?android:textAppearanceMedium"
-            tools:ignore="TextViewEdits"
-            tools:text="@string/steps" />
+            android:background="@color/colorTitle"
+            android:contentDescription="@string/recipeDescription"
+            android:padding="@dimen/defaultMargin"
+            android:src="@drawable/ic_back" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:id="@+id/prevVw"
-               style="@style/wrapStyle"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/defaultMargin"
-                android:background="@color/colorTitle"
-                android:contentDescription="@string/recipeDescription"
-                android:padding="@dimen/defaultMargin"
-                android:src="@drawable/ic_back" />
-
-            <ImageButton
-                android:id="@+id/nextVw"
-                style="@style/wrapStyle"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/defaultMargin"
-                android:background="@color/colorTitle"
-                android:contentDescription="@string/recipeDescription"
-                android:padding="@dimen/defaultMargin"
-                android:src="@drawable/ic_right" />
-        </RelativeLayout>
+        <ImageButton
+            android:id="@+id/nextVw"
+            style="@style/wrapStyle"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/defaultMargin"
+            android:background="@color/colorTitle"
+            android:contentDescription="@string/recipeDescription"
+            android:padding="@dimen/defaultMargin"
+            android:src="@drawable/ic_right" />
+    </RelativeLayout>
 
 </LinearLayout>

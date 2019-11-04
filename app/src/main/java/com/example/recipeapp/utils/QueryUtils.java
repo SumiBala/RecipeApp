@@ -41,6 +41,7 @@ public class QueryUtils {
     private static final String SHORTDESC = "shortDescription";
     private static final String DESCRIPTION = "description";
     private static final String VIDEOURL = "videoURL";
+    private static final String THUMBNAILURL = "thumbnailURL";
 
     // The Idling Resource which will be null in production.
     @Nullable
@@ -150,7 +151,9 @@ public class QueryUtils {
                     String sDesc = currentSteps.getString(SHORTDESC);
                     String description = currentSteps.getString(DESCRIPTION);
                     String video = currentSteps.getString(VIDEOURL);
-                    stepsArrayList.add(new Steps(sDesc, description, video));
+                    String imageUrl = currentSteps.getString(THUMBNAILURL);
+                    stepsArrayList.add(new Steps(sDesc, description, video,imageUrl));
+
                 }
                 RecipeList.add(new Recipe(recipeId, recipeTitle, recipeimage, servings, ingredientArrayList, stepsArrayList));
             }

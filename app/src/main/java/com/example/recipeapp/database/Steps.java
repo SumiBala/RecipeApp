@@ -7,17 +7,20 @@ public class Steps implements Parcelable {
     private String shortDescription;
     private String description;
     private String videoUrl;
+    private String imageUrl;
 
-    public Steps(String shortDescription, String description, String videoUrl) {
+    public Steps(String shortDescription, String description, String videoUrl, String imageUrl) {
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoUrl = videoUrl;
+        this.imageUrl = imageUrl;
     }
 
     protected Steps(Parcel in) {
         shortDescription = in.readString();
         description = in.readString();
         videoUrl = in.readString();
+        imageUrl = in.readString();
     }
 
     public static final Creator<Steps> CREATOR = new Creator<Steps>() {
@@ -56,6 +59,14 @@ public class Steps implements Parcelable {
         this.videoUrl = videoUrl;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -66,5 +77,8 @@ public class Steps implements Parcelable {
         dest.writeString(shortDescription);
         dest.writeString(description);
         dest.writeString(videoUrl);
+        dest.writeString(imageUrl);
     }
+
+
 }

@@ -2,7 +2,6 @@ package com.example.recipeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.recipeapp.database.Steps;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,15 +24,17 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
 
     private static final String STEPS = "steps";
     private static final String IMGSRC = "image";
-    private List<Steps> mSteps;
+    private static final String RUNONTAB = "twoPane";
+    private ArrayList<Steps> mSteps;
     @BindView(R.id.recipeRv)
     RecyclerView rListView;
     @BindView(R.id.emptyTextView)
     TextView emptyTxtVw;
     @BindView(R.id.loadingIndicator)
     ProgressBar loadingBar;
-    String mImgsrc;
-    StepsAdapter stepsAdapter;
+    private String mImgsrc;
+    private StepsAdapter stepsAdapter;
+    private boolean mTwoPane;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -42,11 +43,12 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
     public StepsFragment() {
     }
 
-    public static StepsFragment newInstance(String image, ArrayList<Steps> stepsArrayList) {
+    public static StepsFragment newInstance(String image, ArrayList<Steps> stepsArrayList, boolean mTwoPane) {
         StepsFragment fragment = new StepsFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(STEPS, stepsArrayList);
         args.putString(IMGSRC, image);
+        args.putBoolean(RUNONTAB, mTwoPane);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,6 +59,7 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
         if (getArguments() != null) {
             mSteps = getArguments().getParcelableArrayList(STEPS);
             mImgsrc = getArguments().getString(IMGSRC);
+            mTwoPane = getArguments().getBoolean(RUNONTAB);
         }
     }
 
@@ -90,10 +93,17 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsAdapter
 
     @Override
     public void onClick(Steps steps, int position) {
-        Intent intent = new Intent(getContext(), VideoActivity.class);
-        intent.putParcelableArrayListExtra("steps", (ArrayList<? extends Parcelable>) mSteps);
-        intent.putExtra("imageSrc", mImgsrc);
-        intent.putExtra("index", position);
-        startActivity(intent);
+        if (mTwoPane) {
+            //Run on Tablet.
+            VideoFragment videoFragment = VideoFragment.newInstance(mImgsrc, mSteps, position);
+            Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.rdetail_video_container, videoFragment).commit();
+        } else {
+            //Run on Phone.
+            Intent intent = new Intent(getContext(), VideoActivity.class);
+            intent.putParcelableArrayListExtra("steps", mSteps);
+            intent.putExtra("imageSrc", mImgsrc);
+            intent.putExtra("index", position);
+            startActivity(intent);
+        }
     }
 }
