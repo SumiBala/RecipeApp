@@ -10,10 +10,11 @@ Advanced Android programming concepts
 * Automated UI tests.
 * Running on tab and android.
 
-Android libraries
+ThirdParty libraries
 -----------------
 * Butterknife for view binding.
 * Espresso for writing automated UI tests.
 * Picasso for Image Loading.
+* Schematic for Database.
 
 *Part of Udacity's Android Developer Nanodegree Project.*
